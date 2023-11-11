@@ -3,7 +3,7 @@ import { Button, Form, Input, Label, Message, Pagination, Popup, Table } from 's
 import { Link } from 'react-router-dom';
 import { API, setPromptShown, shouldShowPrompt, showError, showInfo, showSuccess, timestamp2string } from '../helpers';
 
-import { CHANNEL_OPTIONS, ITEMS_PER_PAGE } from '../constants';
+import { CHANNEL_OPTIONS, CHANNEL_ITEMS_PER_PAGE } from '../constants';
 import { renderGroup, renderNumber } from '../helpers/render';
 
 function renderTimestamp(timestamp) {
@@ -65,7 +65,7 @@ const ChannelsTable = () => {
         setChannels(data);
       } else {
         let newChannels = [...channels];
-        newChannels.splice(startIdx * ITEMS_PER_PAGE, data.length, ...data);
+        newChannels.splice(startIdx * CHANNEL_ITEMS_PER_PAGE, data.length, ...data);
         setChannels(newChannels);
       }
     } else {
@@ -76,7 +76,7 @@ const ChannelsTable = () => {
 
   const onPaginationChange = (e, { activePage }) => {
     (async () => {
-      if (activePage === Math.ceil(channels.length / ITEMS_PER_PAGE) + 1) {
+      if (activePage === Math.ceil(channels.length / CHANNEL_ITEMS_PER_PAGE) + 1) {
         // In this case we have to load more data and then append them.
         await loadChannels(activePage - 1);
       }
@@ -135,7 +135,7 @@ const ChannelsTable = () => {
       showSuccess('操作成功完成！');
       let channel = res.data.data;
       let newChannels = [...channels];
-      let realIdx = (activePage - 1) * ITEMS_PER_PAGE + idx;
+      let realIdx = (activePage - 1) * CHANNEL_ITEMS_PER_PAGE + idx;
       if (action === 'delete') {
         newChannels[realIdx].deleted = true;
       } else {
@@ -220,7 +220,7 @@ const ChannelsTable = () => {
     const { success, message, time } = res.data;
     if (success) {
       let newChannels = [...channels];
-      let realIdx = (activePage - 1) * ITEMS_PER_PAGE + idx;
+      let realIdx = (activePage - 1) * CHANNEL_ITEMS_PER_PAGE + idx;
       newChannels[realIdx].response_time = time * 1000;
       newChannels[realIdx].test_time = Date.now() / 1000;
       setChannels(newChannels);
@@ -256,7 +256,7 @@ const ChannelsTable = () => {
     const { success, message, balance } = res.data;
     if (success) {
       let newChannels = [...channels];
-      let realIdx = (activePage - 1) * ITEMS_PER_PAGE + idx;
+      let realIdx = (activePage - 1) * CHANNEL_ITEMS_PER_PAGE + idx;
       newChannels[realIdx].balance = balance;
       newChannels[realIdx].balance_updated_time = Date.now() / 1000;
       setChannels(newChannels);
@@ -403,8 +403,8 @@ const ChannelsTable = () => {
         <Table.Body>
           {channels
             .slice(
-              (activePage - 1) * ITEMS_PER_PAGE,
-              activePage * ITEMS_PER_PAGE
+              (activePage - 1) * CHANNEL_ITEMS_PER_PAGE,
+              activePage * CHANNEL_ITEMS_PER_PAGE
             )
             .map((channel, idx) => {
               if (channel.deleted) return <></>;
@@ -548,8 +548,8 @@ const ChannelsTable = () => {
                 size='small'
                 siblingRange={1}
                 totalPages={
-                  Math.ceil(channels.length / ITEMS_PER_PAGE) +
-                  (channels.length % ITEMS_PER_PAGE === 0 ? 1 : 0)
+                  Math.ceil(channels.length / CHANNEL_ITEMS_PER_PAGE) +
+                  (channels.length % CHANNEL_ITEMS_PER_PAGE === 0 ? 1 : 0)
                 }
               />
               <Button size='small' onClick={refresh} loading={loading}>刷新</Button>
