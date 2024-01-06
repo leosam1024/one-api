@@ -14,7 +14,7 @@ func GetAllChannels(c *gin.Context) {
 	if p < 0 {
 		p = 0
 	}
-	channels, err := model.GetAllChannels(p*common.ItemsPerPage, common.ItemsPerPage, false)
+	channels, err := model.GetAllChannels(p*common.ChannelItemsPerPage, common.ChannelItemsPerPage, false)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,
